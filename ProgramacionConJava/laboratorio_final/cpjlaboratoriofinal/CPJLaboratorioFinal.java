@@ -10,7 +10,7 @@ public class CPJLaboratorioFinal {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		int opcion;
-		String nombreArchivo = "laboratorio_final\\peliculas.txt";
+		String nombreArchivo = "ProgramacionConJava\\laboratorio_final\\peliculas.txt";
 		String nombrePelicula;
 		CatalogoPeliculas catalogoPeliculas = new CatalogoPeliculasImpl();
 		
@@ -27,14 +27,23 @@ public class CPJLaboratorioFinal {
 		} while(opcion < 0 || opcion > 4);
 		
 		switch(opcion) {
-		case 1: System.out.println("opcion 1");
+		case 1: 
+				System.out.println("opcion 1");
 			break;
-		case 2: System.out.println("Introduce el nombre de la pelicula a agregar");
+		case 2: 
+				System.out.println("Introduce el nombre de la pelicula a agregar");
 				nombrePelicula = scanner.next();
 				System.out.println("nombrePelicula: "+nombrePelicula);
 				catalogoPeliculas.agregarPelicula(nombrePelicula, nombreArchivo);
 			break;
-				
+		case 3: 
+				catalogoPeliculas.listarPeliculas(nombreArchivo);
+			break;
+		case 4: 
+				System.out.println("Ingrese pelicula a buscar:");
+				nombrePelicula = scanner.next();
+				System.out.println("nombrePelicula: "+nombrePelicula);
+				catalogoPeliculas.buscarPelicula(nombreArchivo, nombrePelicula);
 		}
 
 	}
