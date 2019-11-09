@@ -5,38 +5,66 @@ import java.util.List;
 import peliculas.datos.AccesoDatos;
 import peliculas.datos.AccesoDatosImpl;
 import peliculas.domain.Pelicula;
+import peliculas.excepciones.AccesoDatosEx;
+import peliculas.excepciones.EscrituraDatosEx;
+import peliculas.excepciones.LecturaDatosEx;
 
 public class CatalogoPeliculasImpl implements CatalogoPeliculas {
 	
-	AccesoDatos accesoDatos = new AccesoDatosImpl();
+	private final AccesoDatos accesoDatos;
+	
+	public CatalogoPeliculasImpl() {
+		this.accesoDatos = new AccesoDatosImpl();
+	}
 
 	@Override
-	public void agregarPelicula(String nombrePelicula, String nombreArchivo) {	
-		accesoDatos.escribir(new Pelicula(nombrePelicula), nombreArchivo, true);		
+	public void agregarPelicula(String nombrePelicula, String nombreArchivo) {
+		boolean anexar = false;
+		try {
+			accesoDatos.escribir(new Pelicula(nombrePelicula), nombreArchivo, accesoDatos.existe(nombreArchivo));
+		} catch (AccesoDatosEx e) {
+			System.out.println("Error de acceso a datos");
+			e.printStackTrace();
+		}		
 	}
 
 	@Override
 	public void listarPeliculas(String nombreArchivo) {
-		List<Pelicula> peliculas = accesoDatos.listar(nombreArchivo);
-		for(Pelicula p: peliculas) {
-			System.out.println("Pelicula: "+p.getNombre());
-		}
+		try {
+			List<Pelicula> peliculas = accesoDatos.listar(nombreArchivo);
+			for(Pelicula p: peliculas) {
+				System.out.println("Pelicula: "+p.getNombre());
+			}
+		} catch (AccesoDatosEx e) {
+			System.out.println("Error de acceso a datos");
+			e.printStackTrace();
+		}		
 	}
 
 	@Override
 	public void buscarPelicula(String nombreArchivo, String buscar) {
-		String pelicula = accesoDatos.buscar(nombreArchivo, buscar);
-		if(pelicula == null)
-			System.out.println("No se encontro la pelicula indicada");
-		else
-			System.out.println("Pelicula encontrada: "+pelicula);
-		
+		String pelicula = null;
+		try {
+			pelicula = accesoDatos.buscar(nombreArchivo, buscar);
+		} catch (LecturaDatosEx e) {
+			System.out.println("Error al buscar la pelicula");
+			e.printStackTrace();
+		}
+		System.out.println("Resultado busqueda: "+pelicula);	
 	}
 
 	@Override
 	public void iniciarArchivo(String nombreArchivo) {
-		// TODO Auto-generated method stub
-		
+		try {
+			if(accesoDatos.existe(nombreArchivo)) {
+				accesoDatos.borrar(nombreArchivo);
+				accesoDatos.crear(nombreArchivo);
+			} else {
+				accesoDatos.crear(nombreArchivo);
+			}
+		} catch (AccesoDatosEx e) {
+			System.out.println("Error de acceso a datos");
+			e.printStackTrace();
+		}
 	}
-
 }

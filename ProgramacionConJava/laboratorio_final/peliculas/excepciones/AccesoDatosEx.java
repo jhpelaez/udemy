@@ -1,9 +1,10 @@
 package peliculas.excepciones;
 
 public class AccesoDatosEx extends Exception {
+	String mensaje;
 	
 	public AccesoDatosEx(String mensaje) {
-		super(mensaje);
+		this.mensaje = mensaje;
 	}
 
 }

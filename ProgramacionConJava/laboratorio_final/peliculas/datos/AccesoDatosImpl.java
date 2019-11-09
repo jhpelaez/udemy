@@ -16,8 +16,8 @@ public class AccesoDatosImpl implements AccesoDatos {
 
 	@Override
 	public boolean existe(String nombreArchivo) {
-		// TODO Auto-generated method stub
-		return false;
+		File archivo = new File(nombreArchivo);
+		return archivo.exists();
 	}
 
 	@Override
@@ -42,17 +42,15 @@ public class AccesoDatosImpl implements AccesoDatos {
 
 	@Override
 	public void escribir(Pelicula pelicula, String nombreArchivo, boolean anexar) {
-		
 		File archivo = new File(nombreArchivo);
 		try {
-			PrintWriter escribir = new PrintWriter(new FileWriter(archivo, true));
+			PrintWriter escribir = new PrintWriter(new FileWriter(archivo, anexar));
 			escribir.println(pelicula.getNombre());
 			escribir.close();
 			System.out.println("Se ha escrito correctamente al archivo");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
@@ -63,8 +61,10 @@ public class AccesoDatosImpl implements AccesoDatos {
 			BufferedReader capturar = new BufferedReader(new FileReader(archivo));
 			resultado = capturar.readLine();
 			while (resultado != null) {
-				if (resultado.equals(buscar))
-					return resultado = buscar;
+				if (resultado.equals(buscar)) {
+					resultado = buscar;
+					break;
+				}	
 				resultado = capturar.readLine();
 			}
 			capturar.close();
@@ -78,14 +78,20 @@ public class AccesoDatosImpl implements AccesoDatos {
 
 	@Override
 	public void crear(String nombreArchivo) {
-		// TODO Auto-generated method stub
-		
+		File archivo = new File(nombreArchivo);
+		try {
+			PrintWriter escribir = new PrintWriter(new FileWriter(archivo));
+			escribir.close();
+			System.out.println("Archivo creado exitosamente");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 
 	@Override
 	public void borrar(String nombreArchivo) {
-		// TODO Auto-generated method stub
-		
+		File archivo = new File(nombreArchivo);
+		archivo.delete();
+		System.out.println("Se ha borrado el archivo correctamente");
 	}
-
 }
